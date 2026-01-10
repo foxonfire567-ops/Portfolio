@@ -72,12 +72,21 @@
       overflow: hidden;
       white-space: nowrap;
       border-right: 3px solid rgba(255,255,255,0.7);
-      animation:
-        typewriter 2.8s steps(40, end),
-        blink 0.8s step-end infinite;
+      width: 0;
       font-size: 1.15rem;
       opacity: 0.85;
-      max-width: 100%;
+    }
+
+    .typing.first {
+      animation:
+        typewriter 2.4s steps(40, end) forwards,
+        blink 0.8s step-end infinite;
+    }
+
+    .typing.second {
+      animation:
+        typewriter 1.2s steps(12, end) 0.3s forwards,
+        blink 0.8s step-end infinite;
     }
 
     /* ---------- Section ---------- */
@@ -175,7 +184,6 @@
       opacity: 0.85;
       margin-bottom: 24px;
       line-height: 1.6;
-      animation: fadeUp 1.2s ease forwards;
     }
 
     .card a {
@@ -207,38 +215,27 @@
 
   <header>
     <h1>Foxonfire's Portfolio</h1>
-    <p class="typing">Projects focused on functionality and design</p>
+    <p class="typing first">Projects focused on functionality</p><br>
+    <p class="typing second">and design</p>
   </header>
 
   <section>
     <h2>Projects</h2>
 
     <div class="projects">
-
-      <div class="card" style="animation-delay: 0.2s;">
+      <div class="card">
         <span class="status done">FULLY DONE</span>
         <h3>Life Stats</h3>
-        <p>
-          A completed web project presenting life statistics through a clean,
-          structured, and visually focused interface.
-        </p>
-        <a href="https://share.google/jujWVsLIGdvnvxSqr" target="_blank">
-          View Project
-        </a>
+        <p>A completed web project presenting life statistics through a clean, structured, and visually focused interface.</p>
+        <a href="https://share.google/jujWVsLIGdvnvxSqr" target="_blank">View Project</a>
       </div>
 
-      <div class="card" style="animation-delay: 0.4s;">
+      <div class="card">
         <span class="status progress">IN PROGRESS</span>
         <h3>Debix IB Virtual Machine</h3>
-        <p>
-          An ongoing virtual machine project with an emphasis on control,
-          performance, and extensibility.
-        </p>
-        <a href="https://share.google/0i6fwYTXbVH1OGPJt" target="_blank">
-          View Progress
-        </a>
+        <p>An ongoing virtual machine project with an emphasis on control, performance, and extensibility.</p>
+        <a href="https://share.google/0i6fwYTXbVH1OGPJt" target="_blank">View Progress</a>
       </div>
-
     </div>
   </section>
 
