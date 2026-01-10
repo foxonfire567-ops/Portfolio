@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio</title>
+
+  <style>
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(
+        -45deg,
+        #1a0000,
+        #3b0000,
+        #6b0018,
+        #1a0000
+      );
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      color: #ffffff;
+    }
+
+    header {
+      text-align: center;
+      padding: 90px 20px;
+      animation: fadeUp 1.2s ease forwards;
+    }
+
+    header h1 {
+      font-size: 3.5rem;
+      letter-spacing: 2px;
+    }
+
+    header p {
+      margin-top: 14px;
+      font-size: 1.1rem;
+      opacity: 0.85;
+    }
+
+    section {
+      max-width: 1100px;
+      margin: auto;
+      padding: 60px 20px;
+    }
+
+    h2 {
+      font-size: 2.4rem;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 18px;
+      padding: 32px;
+      backdrop-filter: blur(14px);
+      animation: fadeUp 1s ease forwards;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+    }
+
+    .card h3 {
+      font-size: 1.7rem;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      margin-bottom: 16px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .done {
+      background: #b00020;
+      color: #ffffff;
+    }
+
+    .progress {
+      background: #ff8c42;
+      color: #2b0000;
+    }
+
+    .card p {
+      opacity: 0.85;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .card a {
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #b00020, #6b0018);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: inline-block;
+    }
+
+    .card a:hover {
+      transform: scale(1.08);
+      box-shadow: 0 12px 35px rgba(176, 0, 32, 0.6);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px;
+      font-size: 0.9rem;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>My Portfolio</h1>
+    <p>Projects focused on functionality, performance, and design</p>
+  </header>
+
+  <section>
+    <h2>Projects</h2>
+
+    <div class="projects">
+
+      <div class="card" style="animation-delay: 0.2s;">
+        <span class="status done">FULLY DONE</span>
+        <h3>Life Stats</h3>
+        <p>
+          A completed web project presenting life statistics through a clean
+          and structured interface.
+        </p>
+        <a href="https://share.google/jujWVsLIGdvnvxSqr" target="_blank">
+          View Project
+        </a>
+      </div>
+
+      <div class="card" style="animation-delay: 0.4s;">
+        <span class="status progress">IN PROGRESS</span>
+        <h3>Debix IB Virtual Machine</h3>
+        <p>
+          An ongoing virtual machine project.
+        </p>
+        <a href="https://share.google/0i6fwYTXbVH1OGPJt" target="_blank">
+          View Progress
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    © 2026
+  </footer>
+
+</body>
+</html>
