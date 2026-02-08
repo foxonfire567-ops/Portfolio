@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FoxonfireOFC - My Videos">
+    <title>FoxonfireOFC | Videos</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="assets/images/avatar.png">
+</head>
+<body>
+    <div class="scroll-indicator"></div>
+    <div class="particle-container"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/avatar.png" alt="FoxonfireOFC Logo" class="logo-img">
+                <span class="logo-text">FoxonfireOFC</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">About</a></li>
+                <li><a href="links.html">Links</a></li>
+                <li><a href="videos.html" class="active">Videos</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="page-header">
+            <h1>My Videos</h1>
+            <p>Check out my latest content</p>
+        </div>
+<!-- Font -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<style>
+/* ========== VIDEOS ONLY CSS ========== */
+
+:root{
+    --primary:#e63946;
+    --primary-hover:#ff5a67;
+    --bg:#0a0a0f;
+    --bg-card:#111118;
+    --text:#fff;
+    --text-dim:#888;
+    --radius:12px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+    font-family:'Outfit',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+.section{
+    padding:6rem 2rem;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+}
+
+.section-title{
+    text-align:center;
+    font-size:2rem;
+    margin-bottom:.5rem;
+}
+
+.section-subtitle{
+    text-align:center;
+    color:var(--text-dim);
+    margin-bottom:3rem;
+}
+
+/* GRID */
+.videos-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1.5rem;
+}
+
+/* CARD */
+.video-card{
+    background:var(--bg-card);
+    border-radius:var(--radius);
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.05);
+    transition:.3s;
+    text-decoration:none;
+    color:inherit;
+}
+
+.video-card:hover{
+    transform:translateY(-5px);
+    border-color:var(--primary);
+    box-shadow:0 10px 30px -10px rgba(230,57,70,.3);
+}
+
+.video-thumbnail{
+    position:relative;
+    aspect-ratio:16/9;
+    overflow:hidden;
+}
+
+.video-thumbnail img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.play-button{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:50px;
+    height:50px;
+    background:rgba(230,57,70,.9);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.play-button svg{
+    width:20px;
+    height:20px;
+    fill:white;
+    margin-left:3px;
+}
+
+.video-info{
+    padding:1.25rem;
+}
+
+.video-info h3{
+    font-size:1rem;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.video-info p{
+    font-size:.8rem;
+    color:var(--text-dim);
+}
+
+/* LOADING */
+.video-loading{
+    grid-column:1/-1;
+    text-align:center;
+    padding:4rem;
+    color:var(--text-dim);
+}
+
+/* CTA */
+.videos-cta{
+    text-align:center;
+    margin-top:3rem;
+}
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+    padding:.9rem 1.6rem;
+    background:var(--primary);
+    color:white;
+    border-radius:var(--radius);
+    font-weight:600;
+    text-decoration:none;
+}
+
+.btn:hover{
+    background:var(--primary-hover);
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+    .videos-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+
+
+        <div class="videos-grid" id="youtube-videos">
+            <div class="video-loading">Loading videos...</div>
+        </div>
+
+        <div class="videos-cta">
+            <a href="https://www.youtube.com/@foxonfireofc" target="_blank" class="btn">
+                View all on YouTube
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+/* ========== VIDEOS ONLY JS ========== */
+
+document.addEventListener('DOMContentLoaded', fetchYouTubeVideos);
+
+async function fetchYouTubeVideos(){
+
+    const container = document.getElementById('youtube-videos');
+    const channelId = 'UCbq3musWnzy5wbCsuruYxhA';
+    const channelUrl = 'https://www.youtube.com/@foxonfireofc';
+
+    try{
+        const res = await fetch(
+            `https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`
+        );
+        const data = await res.json();
+
+        const videos = data.items
+            .filter(v => !v.link.includes('/shorts/'))
+            .slice(0,3);
+
+        container.innerHTML = videos.map(v=>{
+            const id = new URL(v.link).searchParams.get('v');
+            const date = new Date(v.pubDate).toLocaleDateString('en-US',{
+                year:'numeric',month:'short',day:'numeric'
+            });
+
+            return `
+                <a href="${v.link}" target="_blank" class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="${v.thumbnail || `https://img.youtube.com/vi/${id}/hqdefault.jpg`}">
+                        <div class="play-button">
+                            <svg viewBox="0 0 24 24">
+                                <polygon points="5 3 19 12 5 21"></polygon>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3>${v.title}</h3>
+                        <p>${date}</p>
+                    </div>
+                </a>
+            `;
+        }).join('');
+
+        gsap.from('.video-card',{
+            y:30,
+            opacity:0,
+            duration:.5,
+            stagger:.1
+        });
+
+    }catch(e){
+        container.innerHTML = `
+            <a href="${channelUrl}" target="_blank" class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg">
+                </div>
+                <div class="video-info">
+                    <h3>View on YouTube</h3>
+                    <p>Open channel</p>
+                </div>
+            </a>
+        `;
+    }
+}
+</script>
+</body>
+</html>

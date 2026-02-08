@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - FoxonfireOFC</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="assets/images/avatar.png">
+    <style>
+        .admin-login {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .login-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        .login-box h1 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .login-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
+        }
+        .error-msg {
+            color: #ff4444;
+            margin-top: 1rem;
+        }
+        .admin-panel {
+            display: none;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .admin-panel.active {
+            display: block;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+        }
+        .admin-header h1 {
+            color: var(--accent-color);
+        }
+        .logout-btn {
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 0, 0, 0.3);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .logout-btn:hover {
+            background: rgba(255, 0, 0, 0.5);
+        }
+        .save-btn {
+            padding: 0.8rem 1.5rem;
+            background: rgba(34, 197, 94, 0.3);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .save-btn:hover {
+            background: rgba(34, 197, 94, 0.5);
+            transform: translateY(-1px);
+        }
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .admin-tab {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .admin-tab.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        .admin-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+        .admin-section.active {
+            display: block;
+        }
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .item-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        .item-info {
+            flex: 1;
+        }
+        .item-info h3 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .btn-edit, .btn-delete {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-edit {
+            background: rgba(0, 123, 255, 0.3);
+            color: white;
+        }
+        .btn-edit:hover {
+            background: rgba(0, 123, 255, 0.5);
+        }
+        .btn-delete {
+            background: rgba(255, 0, 0, 0.3);
+            color: white;
+        }
+        .btn-delete:hover {
+            background: rgba(255, 0, 0, 0.5);
+        }
+        .btn-add {
+            padding: 1rem 2rem;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+        .btn-add:hover {
+            transform: translateY(-2px);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: var(--bg-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .modal-header h2 {
+            color: var(--accent-color);
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .image-upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .image-upload-area:hover {
+            border-color: var(--accent-color);
+            background: rgba(255, 107, 53, 0.1);
+        }
+        .image-upload-area.dragover {
+            border-color: var(--accent-color);
+            background: rgba(255, 107, 53, 0.2);
+        }
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            margin-top: 1rem;
+            display: none;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+        }
+        .thumbnail-preview {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .gallery-preview {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-indicator"></div>
+    <div class="particle-container"></div>
+
+    <div class="admin-login" id="loginScreen">
+        <div class="login-box">
+            <h1>Admin Login</h1>
+            <input type="password" id="passwordInput" placeholder="Enter password">
+            <button onclick="authManager.login()">Login</button>
+            <div class="error-msg" id="errorMsg"></div>
+        </div>
+    </div>
+
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h1>Admin Panel</h1>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button class="save-btn" onclick="dataManager.save()" title="Save all changes">
+                    💾 Save Changes
+                </button>
+                <button class="logout-btn" onclick="authManager.logout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="admin-tabs">
+            <div class="admin-tab active" onclick="tabManager.switchTab('links')">Links</div>
+            <div class="admin-tab" onclick="tabManager.switchTab('videos')">Videos</div>
+            <div class="admin-tab" onclick="tabManager.switchTab('gallery')">Gallery</div>
+        </div>
+
+        <div class="admin-section active" id="linksSection">
+            <button class="btn-add" onclick="modalManager.openAddModal('link')">+ Add New Link</button>
+            <div class="item-list" id="linksList"></div>
+        </div>
+
+        <div class="admin-section" id="videosSection">
+            <button class="btn-add" onclick="modalManager.openAddModal('video')">+ Add New Video</button>
+            <div class="item-list" id="videosList"></div>
+        </div>
+
+        <div class="admin-section" id="gallerySection">
+            <button class="btn-add" onclick="modalManager.openAddModal('gallery')">+ Add New Gallery Item</button>
+            <div class="item-list" id="galleryList"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Item</h2>
+                <button class="close-btn" onclick="modalManager.closeModal()">&times;</button>
+            </div>
+            <form id="editForm" onsubmit="formManager.handleSubmit(event)">
+                <input type="hidden" id="editType">
+                <input type="hidden" id="editIndex">
+                
+                <div class="form-group">
+                    <label for="editName">Title / Name</label>
+                    <input type="text" id="editName" required>
+                </div>
+
+                <div class="form-group" id="descriptionGroup">
+                    <label for="editDescription">Description</label>
+                    <textarea id="editDescription"></textarea>
+                </div>
+
+                <div class="form-group" id="urlGroup">
+                    <label for="editUrl">URL</label>
+                    <input type="url" id="editUrl">
+                </div>
+
+                <div class="form-group" id="imageGroup">
+                    <label>Image</label>
+                    <div class="image-upload-area" id="imageUploadArea">
+                        <div class="upload-icon">📁</div>
+                        <p>Click or drag & drop image here</p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Supports: JPG, PNG, GIF, WebP</p>
+                    </div>
+                    <input type="file" id="imageFileInput" accept="image/*" style="display: none;">
+                    <img class="image-preview" id="imagePreview">
+                </div>
+
+                <button type="submit" class="btn-submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        class StorageManager {
+            constructor() {
+                this.storageKey = 'foxonfireAdmin';
+            }
+
+            loadData() {
+                try {
+                    const data = localStorage.getItem(this.storageKey);
+                    return data ? JSON.parse(data) : this.getDefaultData();
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    return this.getDefaultData();
+                }
+            }
+
+            saveData(data) {
+                try {
+                    const jsonString = JSON.stringify(data);
+                    localStorage.setItem(this.storageKey, jsonString);
+                    
+                    // verify it actually saved
+                    const savedData = localStorage.getItem(this.storageKey);
+                    if (savedData === jsonString) {
+                        console.log('✓ Data saved successfully');
+                        return true;
+                    } else {
+                        console.error('Save verification failed - data mismatch');
+                        alert('Warning: Data may not have saved correctly');
+                        return false;
+                    }
+                } catch (error) {
+                    console.error('Error saving data:', error);
+                    alert('Failed to save data: ' + error.message);
+                    return false;
+                }
+            }
+
+            getDefaultData() {
+                return {
+                    links: [
+                        {name: 'YouTube', description: 'My gaming and art channel', url: 'https://youtube.com/@FoxonfireOFCofc', icon: 'youtube'},
+                        {name: 'Discord', description: 'Join my community', url: 'https://discord.gg/yourserver', icon: 'discord'},
+                        {name: 'Twitter', description: 'Follow me for updates', url: 'https://twitter.com/foxonfire', icon: 'twitter'},
+                        {name: 'Twitch', description: 'Watch me stream live', url: 'https://twitch.tv/foxonfire', icon: 'twitch'}
+                    ],
+                    videos: [
+                        {title: 'Welcome to FoxonfireOFC!', description: 'Introduction to my channel', url: 'https://youtube.com/@FoxonfireOFCofc', thumbnail: 'assets/images/banner.png'},
+                        {title: 'Minecraft Adventures', description: 'Epic builds and exploration', url: 'https://youtube.com/@FoxonfireOFCofc', thumbnail: 'assets/images/minecraft-skin.png'},
+                        {title: 'Art Stream Highlights', description: 'Best moments from drawing streams', url: 'https://youtube.com/@FoxonfireOFCofc', thumbnail: 'assets/images/profile.png'}
+                    ],
+                    gallery: [
+                        {title: 'Chibi Avatar', image: 'assets/images/avatar.png'},
+                        {title: 'Profile Art', image: 'assets/images/profile.png'},
+                        {title: 'YouTube Banner', image: 'assets/images/banner.png'},
+                        {title: 'Minecraft Skin', image: 'assets/images/minecraft-skin.png'}
+                    ]
+                };
+            }
+        }
+
+        class DataManager {
+            constructor(storageManager) {
+                this.storage = storageManager;
+                this.data = this.storage.loadData();
+            }
+
+            getData() {
+                return this.data;
+            }
+
+            getItems(type) {
+                return this.data[type + 's'] || [];
+            }
+
+            addItem(type, item) {
+                this.data[type + 's'].push(item);
+                this.save();
+            }
+
+            updateItem(type, index, item) {
+                this.data[type + 's'][index] = item;
+                this.save();
+            }
+
+            deleteItem(type, index) {
+                this.data[type + 's'].splice(index, 1);
+                this.save();
+            }
+
+            save() {
+                const success = this.storage.saveData(this.data);
+                if (success) {
+                    // show quick success indicator
+                    this.showSaveStatus(true);
+                } else {
+                    this.showSaveStatus(false);
+                }
+            }
+
+            showSaveStatus(success) {
+                // create or get status element
+                let status = document.getElementById('saveStatus');
+                if (!status) {
+                    status = document.createElement('div');
+                    status.id = 'saveStatus';
+                    status.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        color: white;
+                        font-weight: 500;
+                        z-index: 99999;
+                        transition: opacity 0.3s ease;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    `;
+                    document.body.appendChild(status);
+                }
+
+                if (success) {
+                    status.style.background = 'rgba(34, 197, 94, 0.9)';
+                    status.textContent = '✓ Changes saved';
+                } else {
+                    status.style.background = 'rgba(239, 68, 68, 0.9)';
+                    status.textContent = '✗ Save failed';
+                }
+
+                status.style.opacity = '1';
+                
+                // fade out after 2sec
+                setTimeout(() => {
+                    status.style.opacity = '0';
+                }, 2000);
+            }
+        }
+
+        class ImageHandler {
+            constructor() {
+                this.currentImageData = null;
+            }
+
+            async handleFile(file) {
+                return new Promise((resolve, reject) => {
+                    if (!file.type.startsWith('image/')) {
+                        reject(new Error('Please select an image file'));
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.currentImageData = e.target.result;
+                        resolve(e.target.result);
+                    };
+                    reader.onerror = () => reject(new Error('Failed to read file'));
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            getCurrentImage() {
+                return this.currentImageData;
+            }
+
+            clearImage() {
+                this.currentImageData = null;
+            }
+
+            showPreview(imageData, previewElement) {
+                previewElement.src = imageData;
+                previewElement.style.display = 'block';
+            }
+
+            hidePreview(previewElement) {
+                previewElement.style.display = 'none';
+                previewElement.src = '';
+            }
+        }
+
+        class UIRenderer {
+            renderLinks(items, container) {
+                container.innerHTML = items.map((link, index) => `
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>${link.name}</h3>
+                            <p style="color: var(--text-muted);">${link.description}</p>
+                            <p style="color: var(--accent-color); margin-top: 0.5rem;">${link.url}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-edit" onclick="modalManager.openEditModal('link', ${index})">Edit</button>
+                            <button class="btn-delete" onclick="confirmDelete('link', ${index})">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            renderVideos(items, container) {
+                container.innerHTML = items.map((video, index) => `
+                    <div class="item-card">
+                        <img src="${video.thumbnail}" class="thumbnail-preview">
+                        <div class="item-info">
+                            <h3>${video.title}</h3>
+                            <p style="color: var(--text-muted);">${video.description}</p>
+                            <p style="color: var(--accent-color); margin-top: 0.5rem;">${video.url}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-edit" onclick="modalManager.openEditModal('video', ${index})">Edit</button>
+                            <button class="btn-delete" onclick="confirmDelete('video', ${index})">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            renderGallery(items, container) {
+                container.innerHTML = items.map((item, index) => `
+                    <div class="item-card">
+                        <img src="${item.image}" class="gallery-preview">
+                        <div class="item-info">
+                            <h3>${item.title}</h3>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-edit" onclick="modalManager.openEditModal('gallery', ${index})">Edit</button>
+                            <button class="btn-delete" onclick="confirmDelete('gallery', ${index})">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        class TabManager {
+            switchTab(tabName) {
+                document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.admin-section').forEach(section => section.classList.remove('active'));
+
+                event.target.classList.add('active');
+                document.getElementById(tabName + 'Section').classList.add('active');
+            }
+        }
+
+        class ModalManager {
+            constructor(dataManager, imageHandler, uiRenderer) {
+                this.dataManager = dataManager;
+                this.imageHandler = imageHandler;
+                this.uiRenderer = uiRenderer;
+                this.setupImageUpload();
+            }
+
+            setupImageUpload() {
+                const uploadArea = document.getElementById('imageUploadArea');
+                const fileInput = document.getElementById('imageFileInput');
+                const preview = document.getElementById('imagePreview');
+
+                uploadArea.addEventListener('click', () => fileInput.click());
+
+                fileInput.addEventListener('change', async (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        try {
+                            const imageData = await this.imageHandler.handleFile(file);
+                            this.imageHandler.showPreview(imageData, preview);
+                        } catch (error) {
+                            alert(error.message);
+                        }
+                    }
+                });
+
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('dragover');
+                });
+
+                uploadArea.addEventListener('drop', async (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    
+                    const file = e.dataTransfer.files[0];
+                    if (file) {
+                        try {
+                            const imageData = await this.imageHandler.handleFile(file);
+                            this.imageHandler.showPreview(imageData, preview);
+                        } catch (error) {
+                            alert(error.message);
+                        }
+                    }
+                });
+            }
+
+            openAddModal(type) {
+                this.imageHandler.clearImage();
+                document.getElementById('editType').value = type;
+                document.getElementById('editIndex').value = '-1';
+                document.getElementById('modalTitle').textContent = `Add New ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+                
+                document.getElementById('editName').value = '';
+                document.getElementById('editDescription').value = '';
+                document.getElementById('editUrl').value = '';
+                this.imageHandler.hidePreview(document.getElementById('imagePreview'));
+
+                this.configureFormFields(type);
+                document.getElementById('editModal').classList.add('active');
+            }
+
+            openEditModal(type, index) {
+                this.imageHandler.clearImage();
+                const items = this.dataManager.getItems(type);
+                const item = items[index];
+
+                document.getElementById('editType').value = type;
+                document.getElementById('editIndex').value = index;
+                document.getElementById('modalTitle').textContent = `Edit ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+
+                if (type === 'link') {
+                    document.getElementById('editName').value = item.name;
+                    document.getElementById('editDescription').value = item.description;
+                    document.getElementById('editUrl').value = item.url;
+                } else if (type === 'video') {
+                    document.getElementById('editName').value = item.title;
+                    document.getElementById('editDescription').value = item.description;
+                    document.getElementById('editUrl').value = item.url;
+                    this.imageHandler.currentImageData = item.thumbnail;
+                    this.imageHandler.showPreview(item.thumbnail, document.getElementById('imagePreview'));
+                } else if (type === 'gallery') {
+                    document.getElementById('editName').value = item.title;
+                    this.imageHandler.currentImageData = item.image;
+                    this.imageHandler.showPreview(item.image, document.getElementById('imagePreview'));
+                }
+
+                this.configureFormFields(type);
+                document.getElementById('editModal').classList.add('active');
+            }
+
+            configureFormFields(type) {
+                const descGroup = document.getElementById('descriptionGroup');
+                const urlGroup = document.getElementById('urlGroup');
+                const imageGroup = document.getElementById('imageGroup');
+
+                if (type === 'link') {
+                    descGroup.style.display = 'block';
+                    urlGroup.style.display = 'block';
+                    imageGroup.style.display = 'none';
+                } else if (type === 'video') {
+                    descGroup.style.display = 'block';
+                    urlGroup.style.display = 'block';
+                    imageGroup.style.display = 'block';
+                } else if (type === 'gallery') {
+                    descGroup.style.display = 'none';
+                    urlGroup.style.display = 'none';
+                    imageGroup.style.display = 'block';
+                }
+            }
+
+            closeModal() {
+                document.getElementById('editModal').classList.remove('active');
+                this.imageHandler.clearImage();
+            }
+        }
+
+        class FormManager {
+            constructor(dataManager, modalManager, uiRenderer, imageHandler) {
+                this.dataManager = dataManager;
+                this.modalManager = modalManager;
+                this.uiRenderer = uiRenderer;
+                this.imageHandler = imageHandler;
+            }
+
+            handleSubmit(event) {
+                event.preventDefault();
+
+                const type = document.getElementById('editType').value;
+                const index = parseInt(document.getElementById('editIndex').value);
+                const name = document.getElementById('editName').value;
+                const description = document.getElementById('editDescription').value;
+                const url = document.getElementById('editUrl').value;
+                const imageData = this.imageHandler.getCurrentImage();
+
+                let newItem;
+                if (type === 'link') {
+                    newItem = {
+                        name: name,
+                        description: description,
+                        url: url,
+                        icon: name.toLowerCase()
+                    };
+                } else if (type === 'video') {
+                    if (!imageData) {
+                        alert('Please upload a thumbnail image');
+                        return;
+                    }
+                    newItem = {
+                        title: name,
+                        description: description,
+                        url: url,
+                        thumbnail: imageData
+                    };
+                } else if (type === 'gallery') {
+                    if (!imageData) {
+                        alert('Please upload an image');
+                        return;
+                    }
+                    newItem = {
+                        title: name,
+                        image: imageData
+                    };
+                }
+
+                if (index === -1) {
+                    this.dataManager.addItem(type, newItem);
+                } else {
+                    this.dataManager.updateItem(type, index, newItem);
+                }
+
+                this.renderAll();
+                this.modalManager.closeModal();
+            }
+
+            renderAll() {
+                const data = this.dataManager.getData();
+                this.uiRenderer.renderLinks(data.links, document.getElementById('linksList'));
+                this.uiRenderer.renderVideos(data.videos, document.getElementById('videosList'));
+                this.uiRenderer.renderGallery(data.gallery, document.getElementById('galleryList'));
+            }
+        }
+
+        class AuthManager {
+            constructor() {
+                this.password = 'FOXY123!';
+            }
+
+            login() {
+                const input = document.getElementById('passwordInput').value;
+                const errorMsg = document.getElementById('errorMsg');
+
+                if (input === this.password) {
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('adminPanel').classList.add('active');
+                    errorMsg.textContent = '';
+                } else {
+                    errorMsg.textContent = 'Incorrect password';
+                }
+            }
+
+            logout() {
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('adminPanel').classList.remove('active');
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        const storageManager = new StorageManager();
+        const dataManager = new DataManager(storageManager);
+        const imageHandler = new ImageHandler();
+        const uiRenderer = new UIRenderer();
+        const tabManager = new TabManager();
+        const modalManager = new ModalManager(dataManager, imageHandler, uiRenderer);
+        const formManager = new FormManager(dataManager, modalManager, uiRenderer, imageHandler);
+        const authManager = new AuthManager();
+
+        function confirmDelete(type, index) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                dataManager.deleteItem(type, index);
+                formManager.renderAll();
+            }
+        }
+
+        formManager.renderAll();
+
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                authManager.login();
+            }
+        });
+    </script>
+</body>
+</html>
