@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <title>Spare mål</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1a0404;
+      color: #fee2e2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: #2a0606;
+      padding: 24px;
+      border-radius: 16px;
+      width: 320px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      border: 1px solid #7f1d1d;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 16px;
+      color: #fecaca;
+    }
+
+    .stat {
+      margin: 8px 0;
+      font-size: 16px;
+    }
+
+    .progress-container {
+      background: #450a0a;
+      border-radius: 999px;
+      overflow: hidden;
+      height: 18px;
+      margin: 16px 0;
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, #dc2626, #f87171);
+      height: 100%;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .percent {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 8px;
+      color: #fca5a5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1> Spare mål</h1>
+
+    <div class="stat">🎯 Goal: <strong>6290 kr</strong></div>
+    <div class="stat">💸 Har nå: <strong>889 kr</strong></div>
+    <div class="stat">❌ Mangler: <strong id="mangler"></strong></div>
+
+    <div class="progress-container">
+      <div class="progress-bar" id="progress"></div>
+    </div>
+
+    <div class="percent" id="prosent"></div>
+  </div>
+
+  <script>
+    const goal = 6290;
+    const har = 889;
+
+    const prosent = Math.round((har / goal) * 100);
+    const mangler = goal - har;
+
+    document.getElementById("progress").style.width = prosent + "%";
+    document.getElementById("prosent").innerText = prosent + "% ferdig";
+    document.getElementById("mangler").innerText = mangler + " kr";
+  </script>
+
+</body>
+</html>
